@@ -31,7 +31,7 @@ class DirichletCharacterFF:
             raise NotImplementedError("The modulus must be square-free.")
         self._modulus = m
         if exps is not None:
-            self._exponents = exps
+            self._exponents = self._init_exponents(exps)
         else:
             self._init_exponents_trivial()
         self._q = m.parent().base_ring().cardinality()
@@ -39,6 +39,11 @@ class DirichletCharacterFF:
 
     def _init_exponents_trivial(self):
         self._exponents = [0] * len(list(self._modulus.factor()))
+
+    def _init_exponents(self, exps):
+        return tuple(
+            exp % (norm_poly(fac) - 1) for (fac, _), exp in zip(self._modulus.factor(), exps)
+        )
 
     def is_trivial(self):
         return all(exp == 0 for exp in self._exponents)
@@ -55,8 +60,22 @@ class DirichletCharacterFF:
     def p(self):
         return self._p
 
+    def image_conductor(self):
+        """For this N, the image of the character will lie in Q(\zeta_N)"""
+        N = 1
+        for (fac, _), exp in zip(self._modulus.factor(), self._exponents):
+            N_ = norm_poly(fac) - 1
+            if exp != 0:
+                N_ /= gcd(N_, exp)  # Optimal N
+            else:
+                N_ = 1
+            if N_ == 2:  # Q(\zeta_2) = Q
+                N_ = 1
+            N = lcm(N, N_)
+        return N
+
     def __call__(self, f):
-        CF = CyclotomicField(order_char_group(self._modulus))
+        CF = CyclotomicField(self.image_conductor())
         res = CF(1)
         for (fac, _), exp in zip(self._modulus.factor(), self._exponents):
             if f % fac == 0:
@@ -64,12 +83,12 @@ class DirichletCharacterFF:
             else:
                 # If f \equiv t^k mod fac, then the output is
                 # \zeta_N^{k * exp} where N = |fac| - 1 = q^deg(fac) - 1
-                N = norm_poly(fac) - 1
-                zeta_N = CyclotomicField(N).gen()
+                N_ = norm_poly(fac) - 1
+                zeta_N_ = CyclotomicField(N_).gen()
                 t_ = fac.parent().gen()
-                for k in range(N):
+                for k in range(N_):
                     if (f - t_^k) % fac == 0:
-                        res *= zeta_N ** (k * exp)
+                        res *= zeta_N_ ** (k * exp)
                         break
         return res
 
@@ -78,7 +97,7 @@ class DirichletCharacterFF:
         L-function associated to the Dirichlet character.
         Polynomial in u = q^(-s) of degree at most deg(m) - 1.
         """
-        N = order_char_group(self._modulus)
+        N = self.image_conductor()  # Use the optimal N
         R.<u> = PolynomialRing(CyclotomicField(N), 'u')
         Lfunc = R(1)
         for n in range(1, self._modulus.degree()):
