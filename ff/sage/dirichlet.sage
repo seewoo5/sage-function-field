@@ -1,6 +1,7 @@
 """Dirichlet character"""
 from sage.all import *
 
+from functools import lru_cache
 from typing import Tuple, Optional
 
 
@@ -177,12 +178,16 @@ class DirichletCharacterFF:
         Check if the character is primitive, i.e. not induced from a character
         of a smaller modulus.
         """
+        raise NotImplementedError
 
     def gauss_sum(self):
         """
-        Compute the Gauss sum associated to the Dirichlet character, defined as
-        \sum_{a \in \mathbb{F}_q^\times} \chi(a) \zeta_p^{\text{Tr}(a)}
+        Compute the Gauss sum associated to odd Dirichlet character, defined as
+        \sum_{a \in \mathbb{F}_q^\times} \chi(a) \zeta_p^{\text{Tr}(a)}.
+        For even character, it simply returns 1.
         """
+        if self.is_even():
+            return CyclotomicField(self._p)(1)
         zp = CyclotomicField(self._p).gen()
         res = 0
         for a in self._modulus.parent().base_ring():
@@ -194,6 +199,8 @@ class DirichletCharacterFF:
         """
         Sign of Gauss sum, defined as Gauss(chi) * q^(-1/2).
         """
+        if self.is_even():
+            return CyclotomicField(self._p)(1)
         return self.gauss_sum() * self.q() ** (-1 / 2)
 
     def __mul__(self, other):
@@ -221,6 +228,12 @@ class DirichletCharacterFF:
         Compute the complex conjugate Dirichlet character.
         """
         return DirichletCharacterFF(self._modulus, tuple(-x for x in self._exponents))
+
+    def __eq__(self, other):
+        if not isinstance(other, DirichletCharacterFF):
+            return TypeError("Can only compare with another DirichletCharacterFF.")
+        return (self._modulus == other._modulus and
+                self._exponents == other._exponents)
 
     def __repr__(self):
         return f"DirichletCharacter of modulus {self._modulus} over GF({self._q}) with exponents={self._exponents}"
@@ -268,7 +281,7 @@ class DirichletCharacterFFQuadratic(DirichletCharacterFF):
     def __init__(self, m):
         if m.parent().characteristic() == 2:
             raise ValueError("Quadratic Dirichlet characters are not defined over characteristic 2 fields.")
-        if not m.is_square_free():
+        if not m.is_squarefree():
             raise ValueError("Quadratic Dirichlet characters are only defined for square-free moduli.")
         exps = self._init_exponents_quad(m)
         super().__init__(m, exps)
@@ -277,6 +290,7 @@ class DirichletCharacterFFQuadratic(DirichletCharacterFF):
         return tuple((norm_poly(fac) - 1) // 2 for fac, _ in m.factor())
 
     def __call__(self, f):
+        f = self.ring()(f) % self._modulus
         return quad_char(f, self._modulus)
 
     def conjugate(self):
@@ -285,3 +299,16 @@ class DirichletCharacterFFQuadratic(DirichletCharacterFF):
         For quadratic (real) characters, this is just the character itself.
         """
         return DirichletCharacterFFQuadratic(self._modulus)
+
+
+def random_dirichlet_character(m):
+    """
+    Return random Dirichlet character modulo m.
+    """
+    q = m.parent().base_ring().cardinality()
+    exponents = []
+    for fac, e in m.factor():
+        # exponent randomly sampled in [0, euler_totient(fac ^ e))
+        rexp = randint(0, euler_totient(fac ^ e) - 1)
+        exponents.append(rexp)
+    return DirichletCharacterFF(m, tuple(exponents))
