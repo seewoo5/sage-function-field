@@ -2,6 +2,16 @@
 from sage.all import *
 
 
+def leading_coeff(f):
+    # Leading coefficient of a polynomial f
+    return f.coefficient(f.degree())
+
+
+def normalize(f):
+    # Divide by leading coefficient
+    return f / leading_coeff(f)
+
+
 def norm_poly(f):
     # Norm of a polynomial f, defined as q^{deg(f)}
     # where q is the cardinality of the base field
