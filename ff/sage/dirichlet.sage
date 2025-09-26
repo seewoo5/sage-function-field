@@ -45,7 +45,7 @@ def unit_group_generator(m):
     Raise ValueError if no generator is found, i.e. the unit group is not cyclic.
     """
     R = m.parent()
-    for g in R.monics(max_degree=m.degree() - 1):
+    for g in R.polynomials(max_degree=m.degree() - 1):
         if is_generator(g, m):
             return g
     raise ValueError("No generator found for the unit group modulo m.")
