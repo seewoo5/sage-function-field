@@ -29,6 +29,6 @@ This will generate preparsed python codes including `__init__.py` where you can 
 from ff import *
 ```
 
-## Shanks bias in function fields
+## Shanks' bias in function fields
 
-`shanks_bias.ipynb` provides supplementary codes for the examples in the paper "Shanks bias in function fields".
+`shanks_bias.ipynb` provides supplementary codes for the examples in the paper [Shanks' bias in function fields](https://arxiv.org/abs/2509.16142).
