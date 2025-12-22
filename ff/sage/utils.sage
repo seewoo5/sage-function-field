@@ -55,3 +55,21 @@ def omega(f):
 def lamda(f):
     # Lambda function of f
     return (-1) ** omega(f)
+
+
+def is_perfect_power(f):
+    # Check if polynomial f is a perfect power
+    factors = f.factor()
+    if len(factors) == 0:
+        return True  # The zero polynomial is considered a perfect power
+    exponents = [e for _, e in factors]
+    g = gcd(exponents)
+    return g >= 2
+
+
+def is_powerful(f):
+    # Check if polynomial f is powerful
+    for _, e in f.factor():
+        if e < 2:
+            return False
+    return True

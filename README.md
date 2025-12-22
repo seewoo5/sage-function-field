@@ -32,3 +32,7 @@ from ff import *
 ## Shanks' bias in function fields
 
 `shanks_bias.ipynb` provides supplementary codes for the examples in the paper [Shanks' bias in function fields](https://arxiv.org/abs/2509.16142).
+
+## Powerful Fibonacci polynomials over finite fields
+
+`fibonacci.ipynb` provides supplementary codes for the examples in the paper *Powerful Fibonacci polynomials over finite fields*.
