@@ -36,3 +36,7 @@ from ff import *
 ## Powerful Fibonacci polynomials over finite fields
 
 `fibonacci.ipynb` provides supplementary codes for the examples in the paper [Powerful Fibonacci polynomials over finite fields](https://arxiv.org/abs/2601.02664).
+
+## Ties in function field prime race
+
+`chebyshev_tie.ipynb` provides supplementary codes for the examples in the paper **Ties in function field prime race**.

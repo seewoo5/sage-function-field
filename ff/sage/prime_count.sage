@@ -63,6 +63,18 @@ def sum_pow_zeros(chi, n):
     return gen_func[n]
 
 
+def s(m, n):
+    """
+    Sum of deg P for irreducible P | m with (deg P) | n.
+    """
+    res = 0
+    for factor, _ in m.factor():
+        degP = factor.degree()
+        if n % degP == 0:
+            res += degP
+    return res
+
+
 def U(m, n):
     # for mth root of unity
     # m by m matrix
@@ -107,10 +119,7 @@ def prime_count_cong_vec(n, m):
     cnt_vec = vector([0] * Mp)
     chi = DirichletCharacterFF(m, (1,))
     for d in divisors(n):
-        if (n / d) % M == 0:
-            vec = [q^(n/d) - M]
-        else:
-            vec = [q^(n/d)]
+        vec = [q^(n/d) - s(m, n/d)]
         for l in range(1, Mp):
             vec.append(-sum_pow_zeros(chi^l, n / d))
         cnt_vec += U_inv(Mp, d) * vector(vec)
