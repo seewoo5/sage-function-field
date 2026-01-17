@@ -58,24 +58,25 @@ if __name__ == "__main__":
     # Manual test cases
     R2.<t> = GF(2)['t']
     test_ms = [t^2 + t + 1, t^3 + t + 1, t^4 + t + 1]
-    N = 2
+    N = 20
     for m in test_ms:
-        print(f"Testing for p = 2, modulus {m}")
+        print(f"[Prime Count] Testing for p = 2, modulus {m}")
         test_count(m, N)
+
     R3.<t> = GF(3)['t']
-    test_ms = [t^2 + 1, t^3 - t + 1]
-    N = 1
+    test_ms = [t^2 + 1, t^3 - t + 1, t^2]
+    N = 20
     for m in test_ms:
-        print(f"Testing for p = 3, modulus {m}")
+        print(f"[Prime Count] Testing for p = 3, modulus {m}")
         test_count(m, N)
 
     # Random test cases
-    N = 5
+    N = 10
     for p in [5, 7, 11]:
         while True:
             m = GF(p)['t'].random_element(2)
             if m.is_irreducible():
                 break
         m = normalize(m)
-        print(f"Testing for p = {p}, modulus {m}")
+        print(f"[Prime Count] Testing for p = {p}, modulus {m}")
         test_count(m, N)
