@@ -133,11 +133,25 @@ def prime_count_cong(n, m, c):
         return 0
     cnt_vec = prime_count_cong_vec(n, m)
     Mp = len(cnt_vec)
-    t_ = m.parent().gen()
+    # t_ = m.parent().gen()
+    g = unit_group_generator(m)
     for k in range(Mp):
-        if (c - t_^k) % m == 0:
+        if (c - g^k) % m == 0:
             return ZZ(cnt_vec[k])
     raise ValueError(f"No solution for {c} modulo {m} in prime_count_cong.")
+
+
+def prime_count_cong_all(n, m, c):
+    """
+    Count the number of irreducible monic polynomials of degree n,
+    including non-monic polynomials.
+    """
+    Fq = m.parent().base_ring()
+    cnt = 0
+    for lc in Fq:
+        if lc != 0:
+            cnt += prime_count_cong(n, m, lc * c)
+    return cnt
 
 
 def prime_count_table(N, m):
@@ -152,3 +166,11 @@ def prime_count_table(N, m):
         rows.append({"deg" : n} | {f"({g})^{k} = {g^k % m}" : cnt_vec[k] for k in range(len(cnt_vec))})
     df = pl.from_dicts(rows)
     return df
+
+
+def prime_count_all_table(N, m):
+    """
+    Create a table of prime counts for all congruence classes mod m
+    up to degree N.
+    """
+    pass
