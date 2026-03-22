@@ -168,9 +168,20 @@ def prime_count_table(N, m):
     return df
 
 
-def prime_count_all_table(N, m):
+def prime_count_cumulative_table(N, m):
     """
     Create a table of prime counts for all congruence classes mod m
     up to degree N.
     """
-    pass
+    rows = []
+    g = unit_group_generator(m)
+    cum_cnt_vec = None
+    for n in range(1, N + 1):
+        cnt_vec = prime_count_cong_vec(n, m)
+        if cum_cnt_vec is None:
+            cum_cnt_vec = vector(ZZ, cnt_vec)
+        else:
+            cum_cnt_vec += cnt_vec
+        rows.append({"deg": n} | {f"({g})^{k} = {g^k % m}": cum_cnt_vec[k] for k in range(len(cum_cnt_vec))})
+    df = pl.from_dicts(rows)
+    return df
