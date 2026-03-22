@@ -52,3 +52,30 @@ for file in "$SOURCE_DIR"/*.sage; do
     echo "Error: Expected output file $output_file not found."
   fi
 done
+
+# Preparse test sage files
+TEST_DIR="./test"
+
+if [[ -d $TEST_DIR ]]; then
+  for file in "$TEST_DIR"/*.sage; do
+    # Check if there are any .sage files
+    if [[ ! -e $file ]]; then
+      echo "No .sage files found in $TEST_DIR."
+      break
+    fi
+
+    # Run sage --preparse on the file
+    sage --preparse "$file"
+
+    # Get the output file name (sage prepends an extra `.py` to the file name)
+    output_file="${file%.sage}.sage.py"
+
+    if [[ -e $output_file ]]; then
+      echo "Processed $file to $output_file."
+    else
+      echo "Error: Expected output file $output_file not found."
+    fi
+  done
+else
+  echo "Warning: Test directory $TEST_DIR does not exist, skipping test files."
+fi

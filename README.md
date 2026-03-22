@@ -29,6 +29,12 @@ This will generate preparsed python codes including `__init__.py` where you can 
 from ff import *
 ```
 
+You can run test codes under `test` by
+
+```sh
+sh run_test.sh
+```
+
 ## Shanks' bias in function fields
 
 `shanks_bias.ipynb` provides supplementary codes for the examples in the paper [Shanks' bias in function fields](https://arxiv.org/abs/2509.16142).
@@ -36,3 +42,7 @@ from ff import *
 ## Powerful Fibonacci polynomials over finite fields
 
 `fibonacci.ipynb` provides supplementary codes for the examples in the paper [Powerful Fibonacci polynomials over finite fields](https://arxiv.org/abs/2601.02664).
+
+## Ties in function field prime race
+
+`chebyshev_tie.ipynb` provides supplementary codes for the examples in the paper **Ties in function field prime race**.
