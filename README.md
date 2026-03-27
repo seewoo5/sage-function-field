@@ -45,4 +45,4 @@ sh run_test.sh
 
 ## Ties in function field prime race
 
-`chebyshev_tie.ipynb` provides supplementary codes for the examples in the paper **Ties in function field prime race**.
+`chebyshev_tie.ipynb` provides supplementary codes for the examples in the paper [Ties in function field prime race](https://arxiv.org/abs/2603.21005).
