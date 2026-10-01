@@ -41,7 +41,7 @@ sh run_test.sh
 
 ## Powerful Fibonacci polynomials over finite fields
 
-`fibonacci.ipynb` provides supplementary codes for the examples in the paper [Powerful Fibonacci polynomials over finite fields](https://arxiv.org/abs/2601.02664).
+`fibonacci.ipynb` provides supplementary codes for the examples in the paper [Powerful Fibonacci polynomials over finite fields](https://www.sciencedirect.com/science/article/pii/S1071579726000973).
 
 ## Ties in function field prime race
 
